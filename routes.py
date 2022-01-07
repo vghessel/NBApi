@@ -34,7 +34,7 @@ def teamInd():
     cur = conn.cursor()
     result = cur.execute("SELECT * from NBAteams WHERE id = '{0}';".format(body["id"]))
 
-    return jsonify(result) #####VERIFICAR!!
+    return jsonify(result.fetchall())
 
 
 @app.route("/nba/add", methods=["POST"])
