@@ -1,12 +1,17 @@
 from flask import Flask, request, jsonify
 import sqlite3
+import xml.etree.ElementTree as ET
+
 
 app = Flask("main")
 
 @app.route("/nba", methods=["GET"])
 def teamInfo():
 
-    adress = '/home/vinicius/NBA.db'
+    tree = ET.parse('dbpath.xml')
+    root = tree.getroot()
+    adress = tree.find('dbpath').text
+
     conn = sqlite3.connect(adress)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
@@ -29,7 +34,10 @@ def teamInd():
 
     body = request.get_json()
 
-    adress = '/home/vinicius/NBA.db'
+    tree = ET.parse('dbpath.xml')
+    root = tree.getroot()
+    adress = tree.find('dbpath').text
+
     conn = sqlite3.connect(adress)
     cur = conn.cursor()
     result = cur.execute("SELECT * from NBAteams WHERE id = '{0}';".format(body["id"]))
@@ -55,7 +63,10 @@ def teamAdd():
     if ("goat" not in body):
         return geraResponse(400, "O parâmetro goat é obrigatório!")
 
-    adress = '/home/vinicius/NBA.db'
+    tree = ET.parse('dbpath.xml')
+    root = tree.getroot()
+    adress = tree.find('dbpath').text
+
     conn = sqlite3.connect(adress)
     cur = conn.cursor()
     result = cur.execute("INSERT INTO NBAteams (id, team, conference, founded, titles, goat) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}');".format(body["id"], body["team"], body["conference"], body["founded"], body["titles"], body["goat"]))
@@ -67,8 +78,10 @@ def teamAdd():
 
 @app.route("/nba/update", methods=["PUT"])
 def teamUpdate():
+    tree = ET.parse('dbpath.xml')
+    root = tree.getroot()
+    adress = tree.find('dbpath').text
 
-    adress = '/home/vinicius/NBA.db'
     conn = sqlite3.connect(adress)
     cur = conn.cursor()
 
@@ -118,7 +131,10 @@ def teamDelete():
     if ("id" not in body):
         return geraResponse(400, "Informar apenas o parâmetro id")
 
-    adress = '/home/vinicius/NBA.db'
+    tree = ET.parse('dbpath.xml')
+    root = tree.getroot()
+    adress = tree.find('dbpath').text
+
     conn = sqlite3.connect(adress)
     cur = conn.cursor()
     result = cur.execute("DELETE from NBAteams WHERE id = '{0}';".format(body["id"]))

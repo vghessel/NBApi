@@ -1,0 +1,4 @@
+<config>
+    <dbpath>/home/vinicius/NBA.db</dbpath>
+    <version>v1.0.0</version>
+</config>
